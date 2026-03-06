@@ -1,6 +1,6 @@
 INSTALL ACTIVATED OFFICE 2016 ON LINUX SLACKWARE 15
 
-##I modified and adapted for slackware based on and ispired by formateando (https://www.youtube.com/@formateando)
+##I modified content and adapted for slackware based on and ispired by formateando (https://www.youtube.com/@formateando)
 
 Instructions for Slackware 15.0
 
@@ -89,7 +89,7 @@ WINEPREFIX=$HOME/.winecx-office2016 /opt/winecx/bin/wine "$HOME/Downloads/SW_DVD
 
 https://drive.google.com/file/d/1_JBvLEarzUI4fEnnX983pP03b-oJsx5w/view?usp=sharing
 
-#Extract and enter the folder
+#Extract and enter the folder, place it in the Downloads folder 
 
 cd ~/Downloads
 unzip "Requerimientos Office 2016.zip"
@@ -124,7 +124,7 @@ WINEPREFIX=$HOME/.winecx-office2016 /opt/winecx/bin/wine "C:\\Program Files\\Mic
 unzip "Office 2016 icons.zip"
 unzip "OfficeSoftwareProtectionPlatform.zip"
 
-#Enter the folder 
+#Enter in the folder placed in the Downloads
 
 cd "OfficeSoftwareProtectionPlatform"
 
