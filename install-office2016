@@ -1,0 +1,429 @@
+INSTALL ACTIVADED OFFICE 2016 ON LINUX SLACKWARE 15
+
+##I modified and adapted for slackware based on and ispired by formateando (https://www.youtube.com/@formateando)
+
+Instructions for Slackware 15.0
+
+##First,
+Download:
+wget https://sourceforge.net/projects/slackware-ms/files/winecx-24.0.7.tgz
+wget https://sourceforge.net/projects/slackware-ms/files/wine-9.13-x86_64-1alien.txz
+wget https://sourceforge.net/projects/slackware-ms/files/FAudio-21.12-x86_64-1alien.tgz 
+#Run the following command to install as root
+installpkg *.t?z
+
+##Install 32-bit dependencies and others updates
+
+1.Download and install multilib from alienbob repository
+https://slackware.uk/people/alien/multilib/15.0/
+
+2. Download and update only glibc, aaa_glibc-solibs, binutils  
+https://slackware.uk/slackware/slackware64-15.0/testing/packages/binutils-gcc-glibc/
+
+#Run the following command to install as root
+upgradepkg --install-new --reinstall */*.txz
+
+3. install msitools, winetricks, cabextract, webcore-fonts,7zip, p7zip 
+## sbopkg 
+git nano https://github.com/sbopkg/sbopkg/releases/download/0.38.3/sbopkg-0.38.3-noarch-1_wsr.tgz
+
+4. Verify the installation. If you get wine version - no glibc error - you are on the road again!!! :)
+
+/opt/winecx/bin/wine --version
+
+*INSTALLING OFFICE*
+
+#Set environment variables 
+
+export WINEPREFIX=$HOME/.winecx-office2016
+export WINE=/opt/winecx/bin/wine
+export WINEDLLPATH=/opt/winecx/lib/wine
+export PATH=/opt/winecx/bin:$PATH
+
+#Create a prefix for installation 
+
+WINEARCH=win32 WINEPREFIX=~/.winecx-office2016 wineboot
+
+#Configure the PREFIX to Windows 7 
+
+WINEPREFIX=~/.winecx-office2016 /opt/winecx/bin/wine winecfg -v win7
+
+#Install Office dependencies 
+
+WINEPREFIX=~/.winecx-office2016 winetricks -q corefonts 
+WINEPREFIX=~/.winecx-office2016 winetricks -q msxml6 
+WINEPREFIX=~/.winecx-office2016 winetricks -q riched20 
+WINEPREFIX=~/.winecx-office2016 winetricks -q riched30 
+WINEPREFIX=~/.winecx-office2016 winetricks -q gdiplus 
+WINEPREFIX=~/.winecx-office2016 winetricks -q vb6run 
+WINEPREFIX=~/.winecx-office2016 winetricks -q vcrun2005 
+WINEPREFIX=~/.winecx-office2016 winetricks -q vcrun2008 
+WINEPREFIX=~/.winecx-office2016 winetricks -q vcrun2010 
+WINEPREFIX=~/.winecx-office2016 winetricks -q vcrun2012 
+WINEPREFIX=~/.winecx-office2016 winetricks -q vcrun2013 
+WINEPREFIX=~/.winecx-office2016 winetricks -q vcrun2015 
+WINEPREFIX=~/.winecx-office2016 winetricks -q dotnet48
+WINEPREFIX=~/.winecx-office2016 winetricks --force -q vcrun2019
+
+#Reconfigure the PREFIX to Windows 7 
+
+WINEPREFIX=~/.winecx-office2016 /opt/winecx/bin/wine winecfg -v win7
+
+#Download Office x86 (32-bit), place it in the Downloads folder 
+
+https://buzzheavier.com/y50svzu7djpe
+
+#First nstall 7zip and extract the .iso, run the command or do it graphically
+
+
+cd Downloads
+file=~/Downloads/SW_DVD5_Office_Professional_Plus_2016_W32_English_MLF_X20-41353.ISO
+outdir="${file%.ISO}"
+7z x "$file" -o"$outdir"
+
+#Run the Office installer and install it; the folder name must match the one used in the command
+
+WINEPREFIX=$HOME/.winecx-office2016 /opt/winecx/bin/wine "$HOME/Downloads/SW_DVD5_Office_Professional_Plus_2016_W32_English_MLF_X20-41353/setup.exe"
+
+#Download the requirements from my Google Drive
+
+https://drive.google.com/file/d/1_JBvLEarzUI4fEnnX983pP03b-oJsx5w/view?usp=sharing
+
+#Extract and enter the folder
+
+cd ~/Downloads
+unzip "Requerimientos Office 2016.zip"
+cd "Requerimientos Office 2016"
+
+#Install Gecko
+
+msiextract -C gecko_extract wine-gecko-2.47.4-x86.msi
+sudo mkdir -p /opt/winecx/share/wine/gecko
+sudo cp "$HOME/Downloads/Requerimientos Office 2016/wine-gecko-2.47.4-x86.msi" /opt/winecx/share/wine/gecko/
+sudo cp "$HOME/Downloads/Requerimientos Office 2016/wine-gecko-2.47.4-x86_64.msi" /opt/winecx/share/wine/gecko/
+WINEPREFIX="$HOME/.winecx-office2016" /opt/winecx/bin/wine reg add "HKLM\\Software\\Wine\\Gecko" /v Version /t REG_SZ /d "2.47.4" /f
+
+#Install Mono
+
+msiextract -C mono_extract wine-mono-9.4.0-x86.msi
+sudo mkdir -p /opt/winecx/share/wine/mono
+sudo cp "$HOME/Downloads/Requerimientos Office 2016/wine-mono-9.4.0-x86.msi" /opt/winecx/share/wine/mono/
+WINEPREFIX="$HOME/.winecx-office2016" /opt/winecx/bin/wine reg add "HKLM\\Software\\Wine\\Mono" /v Version /t REG_SZ /d "9.4.0" /f
+
+#Apply DirectX fixes
+
+WINEPREFIX="$HOME/.winecx-office2016" /opt/winecx/bin/wine reg add "HKCU\\Software\\Wine\\Direct2D" /v max_version_factory /t REG_DWORD /d 0 /f && \
+WINEPREFIX="$HOME/.winecx-office2016" /opt/winecx/bin/wine reg add "HKCU\\Software\\Wine\\Direct3D" /v MaxVersionGL /t REG_DWORD /d 0x30002 /f
+
+#Start Excel via the console, execution test
+
+WINEPREFIX=$HOME/.winecx-office2016 /opt/winecx/bin/wine "C:\\Program Files\\Microsoft Office\\Office16\\EXCEL.EXE"
+
+#Extract icon and DLL folders 
+
+unzip "Office 2016 icons.zip"
+unzip "OfficeSoftwareProtectionPlatform.zip"
+
+#Enter the folder 
+
+cd "OfficeSoftwareProtectionPlatform"
+
+#Copy DLLs to the PREFIX
+
+cp OSPPC.DLL OSPPCEXT.DLL sppcs.dll "$HOME/.winecx-office2016/drive_c/Program Files/Common Files/Microsoft Shared/OfficeSoftwareProtectionPlatform/"
+cp sppcs.dll "$HOME/.winecx-office2016/drive_c/Program Files/Microsoft Office/Office16/"
+
+#Copy icons to the system
+
+sudo mkdir -p /usr/share/icons/hicolor/256x256/apps
+sudo cp "$HOME/Downloads/Requerimientos Office 2016/Office 2016 icons/"*.png /usr/share/icons/hicolor/256x256/apps/
+sudo gtk-update-icon-cache /usr/share/icons/hicolor/
+
+#Create a folder for Wrappers
+
+sudo mkdir -p /opt/winecx/launchers
+sudo chmod 755 /opt/winecx/launchers
+
+#Create launchers (.desktop) and update the database, run everything at once
+***************************************************************************
+#WORD
+sudo tee /opt/winecx/launchers/word2016.sh > /dev/null <<'EOF'
+#!/bin/bash
+set -e
+export PATH="/opt/winecx/bin:$PATH"
+export WINEPREFIX="$HOME/.winecx-office2016"
+export LANG=C.UTF-8
+export WINEDEBUG=-all
+
+app="C:\\Program Files\\Microsoft Office\\Office16\\WINWORD.EXE"
+/opt/winecx/bin/wineserver -p >/dev/null 2>&1 || true
+
+if [ $# -eq 0 ]; then
+    exec /opt/winecx/bin/wine "$app"
+else
+    for file in "$@"; do
+        fullpath=$(realpath "$file")
+        winpath="Z:${fullpath//\//\\}"
+        /opt/winecx/bin/wine "$app" "$winpath"
+    done
+fi
+EOF
+sudo chmod +x /opt/winecx/launchers/word2016.sh
+
+sudo tee /usr/share/applications/word2016.desktop > /dev/null <<'EOF'
+[Desktop Entry]
+Name=Microsoft Word 2016
+Comment=Microsoft Office 2016 word processor
+Exec=/opt/winecx/launchers/word2016.sh %F
+Type=Application
+StartupNotify=true
+Terminal=false
+Icon=word2016
+Categories=Office;WordProcessor;
+MimeType=application/msword;application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/vnd.ms-word.document.macroEnabled.12;application/rtf;text/plain;
+EOF
+
+#
+#EXCEL
+sudo tee /opt/winecx/launchers/excel2016.sh > /dev/null <<'EOF'
+#!/bin/bash
+set -e
+export PATH="/opt/winecx/bin:$PATH"
+export WINEPREFIX="$HOME/.winecx-office2016"
+export LANG=C.UTF-8
+export WINEDEBUG=-all
+
+app="C:\\Program Files\\Microsoft Office\\Office16\\EXCEL.EXE"
+
+/opt/winecx/bin/wineserver -p >/dev/null 2>&1 || true
+
+if [ $# -eq 0 ]; then
+    exec /opt/winecx/bin/wine "$app"
+else
+    for file in "$@"; do
+        fullpath=$(realpath "$file")
+        winpath="Z:${fullpath//\//\\}"
+        /opt/winecx/bin/wine "$app" "$winpath"
+    done
+fi
+EOF
+
+sudo chmod +x /opt/winecx/launchers/excel2016.sh
+
+# Desktop
+sudo tee /usr/share/applications/excel2016.desktop > /dev/null <<'EOF'
+[Desktop Entry]
+Name=Microsoft Excel 2016
+Comment=Microsoft Office 2016 spreadsheet
+Exec=/opt/winecx/launchers/excel2016.sh %F
+Type=Application
+StartupNotify=true
+Terminal=false
+Icon=excel2016
+Categories=Office;Spreadsheet;
+MimeType=application/vnd.ms-excel;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;application/vnd.ms-excel.sheet.macroEnabled.12;text/csv;
+EOF
+
+#
+#POWERPOINT
+
+sudo tee /opt/winecx/launchers/powerpoint2016.sh > /dev/null <<'EOF'
+#!/bin/bash
+set -e
+export PATH="/opt/winecx/bin:$PATH"
+export WINEPREFIX="$HOME/.winecx-office2016"
+export LANG=C.UTF-8
+export WINEDEBUG=-all
+
+app="C:\\Program Files\\Microsoft Office\\Office16\\POWERPNT.EXE"
+/opt/winecx/bin/wineserver -p >/dev/null 2>&1 || true
+
+if [ $# -eq 0 ]; then
+    exec /opt/winecx/bin/wine "$app"
+else
+    for file in "$@"; do
+        fullpath=$(realpath "$file")
+        winpath="Z:${fullpath//\//\\}"
+        /opt/winecx/bin/wine "$app" "$winpath"
+    done
+fi
+EOF
+sudo chmod +x /opt/winecx/launchers/powerpoint2016.sh
+
+sudo tee /usr/share/applications/powerpoint2016.desktop > /dev/null <<'EOF'
+[Desktop Entry]
+Name=Microsoft PowerPoint 2016
+Comment=Microsoft Office 2016 presentation software
+Exec=/opt/winecx/launchers/powerpoint2016.sh %F
+Type=Application
+StartupNotify=true
+Terminal=false
+Icon=powerpoint2016
+Categories=Office;Presentation;
+MimeType=application/vnd.ms-powerpoint;application/vnd.openxmlformats-officedocument.presentationml.presentation;application/vnd.ms-powerpoint.presentation.macroEnabled.12;
+EOF
+
+#
+#OUTLOOK
+
+sudo tee /opt/winecx/launchers/outlook2016.sh > /dev/null <<'EOF'
+#!/bin/bash
+set -e
+export PATH="/opt/winecx/bin:$PATH"
+export WINEPREFIX="$HOME/.winecx-office2016"
+export LANG=C.UTF-8
+export WINEDEBUG=-all
+
+app="C:\\Program Files\\Microsoft Office\\Office16\\OUTLOOK.EXE"
+/opt/winecx/bin/wineserver -p >/dev/null 2>&1 || true
+
+if [ $# -eq 0 ]; then
+    exec /opt/winecx/bin/wine "$app"
+else
+    for file in "$@"; do
+        fullpath=$(realpath "$file")
+        winpath="Z:${fullpath//\//\\}"
+        /opt/winecx/bin/wine "$app" "$winpath"
+    done
+fi
+EOF
+sudo chmod +x /opt/winecx/launchers/outlook2016.sh
+
+sudo tee /usr/share/applications/outlook2016.desktop > /dev/null <<'EOF'
+[Desktop Entry]
+Name=Microsoft Outlook 2016
+Comment=Microsoft Office 2016 email client
+Exec=/opt/winecx/launchers/outlook2016.sh %F
+Type=Application
+StartupNotify=true
+Terminal=false
+Icon=outlook2016
+Categories=Office;Email;
+MimeType=application/vnd.ms-outlook;application/mbox;message/rfc822;
+EOF
+
+#
+#ACCESS
+
+sudo tee /opt/winecx/launchers/access2016.sh > /dev/null <<'EOF'
+#!/bin/bash
+set -e
+export PATH="/opt/winecx/bin:$PATH"
+export WINEPREFIX="$HOME/.winecx-office2016"
+export LANG=C.UTF-8
+export WINEDEBUG=-all
+
+app="C:\\Program Files\\Microsoft Office\\Office16\\MSACCESS.EXE"
+/opt/winecx/bin/wineserver -p >/dev/null 2>&1 || true
+
+if [ $# -eq 0 ]; then
+    exec /opt/winecx/bin/wine "$app"
+else
+    for file in "$@"; do
+        fullpath=$(realpath "$file")
+        winpath="Z:${fullpath//\//\\}"
+        /opt/winecx/bin/wine "$app" "$winpath"
+    done
+fi
+EOF
+sudo chmod +x /opt/winecx/launchers/access2016.sh
+
+sudo tee /usr/share/applications/access2016.desktop > /dev/null <<'EOF'
+[Desktop Entry]
+Name=Microsoft Access 2016
+Comment=Microsoft Office 2016 database
+Exec=/opt/winecx/launchers/access2016.sh %F
+Type=Application
+StartupNotify=true
+Terminal=false
+Icon=access2016
+Categories=Office;Database;
+MimeType=application/vnd.ms-access;application/x-msaccess;
+EOF
+
+#
+#PUBLISHER
+
+sudo tee /opt/winecx/launchers/publisher2016.sh > /dev/null <<'EOF'
+#!/bin/bash
+set -e
+export PATH="/opt/winecx/bin:$PATH"
+export WINEPREFIX="$HOME/.winecx-office2016"
+export LANG=C.UTF-8
+export WINEDEBUG=-all
+
+app="C:\\Program Files\\Microsoft Office\\Office16\\MSPUB.EXE"
+/opt/winecx/bin/wineserver -p >/dev/null 2>&1 || true
+
+if [ $# -eq 0 ]; then
+    exec /opt/winecx/bin/wine "$app"
+else
+    for file in "$@"; do
+        fullpath=$(realpath "$file")
+        winpath="Z:${fullpath//\//\\}"
+        /opt/winecx/bin/wine "$app" "$winpath"
+    done
+fi
+EOF
+sudo chmod +x /opt/winecx/launchers/publisher2016.sh
+
+sudo tee /usr/share/applications/publisher2016.desktop > /dev/null <<'EOF'
+[Desktop Entry]
+Name=Microsoft Publisher 2016
+Comment=Microsoft Office 2016 desktop publishing editor
+Exec=/opt/winecx/launchers/publisher2016.sh %F
+Type=Application
+StartupNotify=true
+Terminal=false
+Icon=publisher2016
+Categories=Office;Publishing;
+MimeType=application/x-mspublisher;
+EOF
+
+#
+
+************************************
+
+#Fix EXCEL file associations
+**********************************
+
+cat > /tmp/fix_excel_associations.reg <<'EOF'
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\.xls]
+@="Excel.Sheet.8"
+
+[HKEY_CLASSES_ROOT\.xlsx]
+@="Excel.Sheet.12"
+
+[HKEY_CLASSES_ROOT\Excel.Sheet.8\shell\Open\command]
+@="\"C:\\Program Files\\Microsoft Office\\Office16\\EXCEL.EXE\" \"%1\""
+
+[HKEY_CLASSES_ROOT\Excel.Sheet.12\shell\Open\command]
+@="\"C:\\Program Files\\Microsoft Office\\Office16\\EXCEL.EXE\" \"%1\""
+
+[HKEY_CLASSES_ROOT\Excel.Sheet.8\shell\Open\ddeexec]
+@=""
+
+[HKEY_CLASSES_ROOT\Excel.Sheet.12\shell\Open\ddeexec]
+@=""
+EOF
+*********************************************************************
+WINEPREFIX=$HOME/.winecx-office2016 /opt/winecx/bin/wine regedit /S /tmp/fix_excel_associations.reg
+*********************************************************************
+#Update file associations
+******************************************************************
+xdg-mime default word2016.desktop application/msword
+xdg-mime default word2016.desktop application/vnd.openxmlformats-officedocument.wordprocessingml.document
+xdg-mime default excel2016.desktop application/vnd.ms-excel
+xdg-mime default excel2016.desktop application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+xdg-mime default excel2016.desktop text/csv
+xdg-mime default powerpoint2016.desktop application/vnd.ms-powerpoint
+xdg-mime default powerpoint2016.desktop application/vnd.openxmlformats-officedocument.presentationml.presentation
+xdg-mime default access2016.desktop application/vnd.ms-access
+xdg-mime default publisher2016.desktop application/vnd.ms-publisher
+***********************************************************************
+#Update the application database
+
+sudo update-desktop-database /usr/share/applications
+
