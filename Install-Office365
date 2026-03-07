@@ -35,6 +35,8 @@ Check depends:libvulkan1, libasound2, libx11-6, libfreetype6, libcups2, libgnutl
 
 /opt/winecx/bin/wine --version
 
+Result: crossover-wine-24.0.7 # Go ahead!
+
 *INSTALLING OFFICE*
 
 
