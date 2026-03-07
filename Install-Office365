@@ -1,0 +1,217 @@
+#Save the provided file in the Downloads folder
+
+https://drive.google.com/file/d/10-Cs7OB0ovsj9aCKGs0-pq_xsQnJf7mZ
+
+cd "$HOME/Downloads"
+# Extract the file
+tar -I zstd -xf MSO365-English-.tar.zst
+
+# Enter the extracted folder
+cd "$HOME/Downloads/MSO365-English-"
+
+# Copy the Office 365 prefix to Home
+cp -r .Microsoft_Office_365 "$HOME"
+
+# Copy icons
+sudo mkdir -p /usr/share/icons/hicolor/256x256/apps
+sudo cp "$HOME/Downloads/MSO365-English-/Office365Icons/"*365.svg /usr/share/icons/hicolor/256x256/apps/
+sudo gtk-update-icon-cache /usr/share/icons/hicolor/
+
+# Create launcher folders
+sudo mkdir -p /opt/winecx/launchers
+sudo chmod 755 /opt/winecx/launchers
+
+# Create launchers (run the entire command)
+
+create_launcher() {
+local name="$1"
+local exe="$2"
+
+sudo tee "/opt/winecx/launchers/${name}.sh" > /dev/null <<EOF
+#!/bin/bash
+set -e
+export PATH="/opt/winecx/bin:\$PATH"
+export WINEPREFIX="\$HOME/.Microsoft_Office_365"
+export LANG=C.UTF-8
+export WINEDEBUG=-all
+
+app="C:\\\\Program Files\\\\Microsoft Office\\\\root\\\\Office16\\\\${exe}"
+/opt/winecx/bin/wineserver -p >/dev/null 2>&1 || true
+
+if [ \$# -eq 0 ]; then
+    exec /opt/winecx/bin/wine "\$app"
+else
+    for file in "\$@"; do
+        fullpath=\$(realpath "\$file")
+        winpath="Z:\${fullpath//\//\\\\}"
+        /opt/winecx/bin/wine "\$app" "\$winpath"
+    done
+fi
+EOF
+
+sudo chmod +x "/opt/winecx/launchers/${name}.sh"
+}
+
+create_launcher "word365" "WINWORD.EXE"
+sudo tee /usr/share/applications/word365.desktop > /dev/null <<EOF
+[Desktop Entry]
+Name=Microsoft Word 365
+Comment=Microsoft Office 365 word processor
+Exec=/opt/winecx/launchers/word365.sh %F
+Type=Application
+StartupNotify=true
+Terminal=false
+Icon=Word365
+Categories=Office;WordProcessor;
+MimeType=application/msword;application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/vnd.ms-word.document.macroEnabled.12;application/rtf;text/plain;
+EOF
+
+
+create_launcher "excel365" "EXCEL.EXE"
+sudo tee /usr/share/applications/excel365.desktop > /dev/null <<EOF
+[Desktop Entry]
+Name=Microsoft Excel 365
+Comment=Microsoft Office 365 spreadsheet
+Exec=/opt/winecx/launchers/excel365.sh %F
+Type=Application
+StartupNotify=true
+Terminal=false
+Icon=Excel365
+Categories=Office;Spreadsheet;
+MimeType=application/vnd.ms-excel;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;application/vnd.ms-excel.sheet.macroEnabled.12;text/csv;
+EOF
+
+create_launcher "powerpoint365" "POWERPNT.EXE"
+sudo tee /usr/share/applications/powerpoint365.desktop > /dev/null <<EOF
+[Desktop Entry]
+Name=Microsoft PowerPoint 365
+Comment=Microsoft Office 365 presentations
+Exec=/opt/winecx/launchers/powerpoint365.sh %F
+Type=Application
+StartupNotify=true
+Terminal=false
+Icon=Powerpoint365
+Categories=Office;Presentation;
+MimeType=application/vnd.ms-powerpoint;application/vnd.openxmlformats-officedocument.presentationml.presentation;application/vnd.ms-powerpoint.presentation.macroEnabled.12;
+EOF
+
+create_launcher "outlook365" "OUTLOOK.EXE"
+sudo tee /usr/share/applications/outlook365.desktop > /dev/null <<EOF
+[Desktop Entry]
+Name=Microsoft Outlook 365
+Comment=Microsoft Office 365 email client
+Exec=/opt/winecx/launchers/outlook365.sh %F
+Type=Application
+StartupNotify=true
+Terminal=false
+Icon=Outlook365
+Categories=Office;Email;
+MimeType=application/vnd.ms-outlook;application/mbox;message/rfc822;
+EOF
+
+create_launcher "access365" "MSACCESS.EXE"
+sudo tee /usr/share/applications/access365.desktop > /dev/null <<EOF
+[Desktop Entry]
+Name=Microsoft Access 365
+Comment=Microsoft Office 365 database
+Exec=/opt/winecx/launchers/access365.sh %F
+Type=Application
+StartupNotify=true
+Terminal=false
+Icon=Access365
+Categories=Office;Database;
+MimeType=application/vnd.ms-access;application/x-msaccess;
+EOF
+
+create_launcher "publisher365" "MSPUB.EXE"
+sudo tee /usr/share/applications/publisher365.desktop > /dev/null <<EOF
+[Desktop Entry]
+Name=Microsoft Publisher 365
+Comment=Microsoft Office 365 publishing editor
+Exec=/opt/winecx/launchers/publisher365.sh %F
+Type=Application
+StartupNotify=true
+Terminal=false
+Icon=Publisher365
+Categories=Office;Publishing;
+MimeType=application/x-mspublisher;
+EOF
+
+# Update application database
+sudo update-desktop-database /usr/share/applications
+
+# Fix user permissions
+sudo chown -R "$USER:$USER" ~/.Microsoft_Office_365
+sudo chmod -R u+rwX ~/.Microsoft_Office_365
+
+# Rebuild drive/folder links
+rm -rf "$HOME/.Microsoft_Office_365/dosdevices"
+mkdir -p "$HOME/.Microsoft_Office_365/dosdevices"
+ln -s ../drive_c "$HOME/.Microsoft_Office_365/dosdevices/c:"
+ln -s / "$HOME/.Microsoft_Office_365/dosdevices/z:"
+ln -s /dev/null "$HOME/.Microsoft_Office_365/dosdevices/c::"
+ln -s /dev/null "$HOME/.Microsoft_Office_365/dosdevices/z::"
+ln -s /media "$HOME/.Microsoft_Office_365/dosdevices/d:"
+ln -s "$HOME" "$HOME/.Microsoft_Office_365/dosdevices/e:"
+
+# Rebuild user folders
+mkdir -p ~/.Microsoft_Office_365/drive_c/users/crossover
+mkdir -p ~/.Microsoft_Office_365/drive_c/users/crossover/AppData/Local
+mkdir -p ~/.Microsoft_Office_365/drive_c/users/crossover/AppData/Roaming
+
+# Update prefix
+WINEPREFIX=$HOME/.Microsoft_Office_365 /opt/winecx/bin/wine wineboot -u
+
+# Install fonts
+WINEPREFIX=$HOME/.Microsoft_Office_365 winetricks -q corefonts
+WINEPREFIX=$HOME/.Microsoft_Office_365 winetricks -q fontsmooth=rgb
+WINEPREFIX=$HOME/.Microsoft_Office_365 winetricks -q fontsmooth-gray
+WINEPREFIX=$HOME/.Microsoft_Office_365 winetricks -q tahoma
+WINEPREFIX=$HOME/.Microsoft_Office_365 winetricks -q fakejapanese
+
+# Restart prefix
+pkill -9 -f wineserver || true
+pkill -9 -f wine || true
+pkill -9 -f EXCEL.EXE || true
+pkill -9 -f WINWORD.EXE || true
+pkill -9 -f POWERPNT.EXE || true
+pkill -9 -f OUTLOOK.EXE || true
+pkill -9 -f MSACCESS.EXE || true
+pkill -9 -f MSPUB.EXE || true
+pkill -9 -f OFFICEC2RCLIENT.EXE || true
+pkill -9 -f OfficeClickToRun.exe || true
+
+WINEPREFIX=$HOME/.Microsoft_Office_365 /opt/winecx/bin/wineserver -k
+WINEPREFIX=$HOME/.Microsoft_Office_365 /opt/winecx/bin/wineserver -w
+
+# Copy required Office 365 fonts
+mkdir -p $HOME/.Microsoft_Office_365/drive_c/windows/Fonts
+cd "$HOME/Downloads/MSO365-English-/Fuentes Office365"
+cp *.ttf *.TTF *.ttc $HOME/.Microsoft_Office_365/drive_c/windows/Fonts
+
+# Update installed font registry (run the whole command)
+
+WINEPREFIX=$HOME/.Microsoft_Office_365 bash -c '
+FONTDIR="$WINEPREFIX/drive_c/windows/Fonts"
+REGFILE="$WINEPREFIX/allfonts.reg"
+
+echo "REGEDIT4" > "$REGFILE"
+echo "" >> "$REGFILE"
+echo "[HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Fonts]" >> "$REGFILE"
+
+for f in "$FONTDIR"/*.ttf "$FONTDIR"/*.TTF "$FONTDIR"/*.otf "$FONTDIR"/*.OTF; do
+    [ -e "$f" ] || continue
+    base=$(basename "$f")
+    name="${base%.*}"
+
+    # Convert name to a friendly format
+    label=$(echo "$name" | sed "s/_/ /g" | sed "s/Regular//g" )
+
+    echo "\"$label (TrueType)\"=\"${base}\"" >> "$REGFILE"
+done
+
+/opt/winecx/bin/wine regedit "$REGFILE"
+'
+
+
+
