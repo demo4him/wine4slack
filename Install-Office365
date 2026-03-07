@@ -23,7 +23,7 @@ https://slackware.uk/slackware/slackware64-15.0/testing/packages/binutils-gcc-gl
 #Run the following command to install as root
 upgradepkg --install-new --reinstall */*.txz
 
-3. install msitools, winetricks, cabextract, webcore-fonts,7zip, p7zip, zenity
+3. install msitools, winetricks, cabextract, webcore-fonts, 7zip, p7zip, zenity
 ## sbopkg 
 git nano https://github.com/sbopkg/sbopkg/releases/download/0.38.3/sbopkg-0.38.3-noarch-1_wsr.tgz
 
