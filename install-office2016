@@ -31,6 +31,8 @@ git nano https://github.com/sbopkg/sbopkg/releases/download/0.38.3/sbopkg-0.38.3
 
 /opt/winecx/bin/wine --version
 
+Result: crossover-wine-24.0.7 # Go ahead!
+
 *INSTALLING OFFICE*
 
 #Set environment variables 
