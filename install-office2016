@@ -17,7 +17,7 @@ installpkg *.t?z
 1.Download and install multilib from alienbob repository
 https://slackware.uk/people/alien/multilib/15.0/
 
-2. Download and update only glibc, aaa_glibc-solibs, binutils. This uses the updated glibc 2.42 and will NOT run without it!
+2. Download and update only glibc, aaa_glibc-solibs, binutils. #This uses the updated glibc 2.42 and will NOT run without it!
 https://slackware.uk/slackware/slackware64-15.0/testing/packages/binutils-gcc-glibc/
 
 #Run the following command to install as root
