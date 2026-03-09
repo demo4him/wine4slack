@@ -36,7 +36,7 @@ Result: crossover-wine-24.0.7 # Go ahead!
 
 *INSTALLING OFFICE*
 
-#Set environment variables 
+#Set environment variables - run everything at once
 
 export WINEPREFIX=$HOME/.winecx-office2016
 export WINE=/opt/winecx/bin/wine
@@ -51,7 +51,7 @@ WINEARCH=win32 WINEPREFIX=~/.winecx-office2016 wineboot
 
 WINEPREFIX=~/.winecx-office2016 /opt/winecx/bin/wine winecfg -v win7
 
-#Install Office dependencies 
+#Install Office dependencies - run everything at once
 
 WINEPREFIX=~/.winecx-office2016 winetricks -q corefonts 
 WINEPREFIX=~/.winecx-office2016 winetricks -q msxml6 
@@ -76,7 +76,7 @@ WINEPREFIX=~/.winecx-office2016 /opt/winecx/bin/wine winecfg -v win7
 
 https://buzzheavier.com/y50svzu7djpe
 
-#First nstall 7zip and extract the .iso, run the command or do it graphically
+#First nstall 7zip and extract the .iso, run the command or do it graphically - run everything at once
 
 
 cd Downloads
@@ -92,13 +92,13 @@ WINEPREFIX=$HOME/.winecx-office2016 /opt/winecx/bin/wine "$HOME/Downloads/SW_DVD
 
 https://drive.google.com/file/d/1_JBvLEarzUI4fEnnX983pP03b-oJsx5w/view?usp=sharing
 
-#Extract and enter the folder, place it in the Downloads folder 
+#Extract and enter the folder, place it in the Downloads folder - run everything at once
 
 cd ~/Downloads
 unzip "Requerimientos Office 2016.zip"
 cd "Requerimientos Office 2016"
 
-#Install Gecko
+#Install Gecko - run everything at once
 
 msiextract -C gecko_extract wine-gecko-2.47.4-x86.msi
 sudo mkdir -p /opt/winecx/share/wine/gecko
@@ -106,14 +106,14 @@ sudo cp "$HOME/Downloads/Requerimientos Office 2016/wine-gecko-2.47.4-x86.msi" /
 sudo cp "$HOME/Downloads/Requerimientos Office 2016/wine-gecko-2.47.4-x86_64.msi" /opt/winecx/share/wine/gecko/
 WINEPREFIX="$HOME/.winecx-office2016" /opt/winecx/bin/wine reg add "HKLM\\Software\\Wine\\Gecko" /v Version /t REG_SZ /d "2.47.4" /f
 
-#Install Mono
+#Install Mono - run everything at once
 
 msiextract -C mono_extract wine-mono-9.4.0-x86.msi
 sudo mkdir -p /opt/winecx/share/wine/mono
 sudo cp "$HOME/Downloads/Requerimientos Office 2016/wine-mono-9.4.0-x86.msi" /opt/winecx/share/wine/mono/
 WINEPREFIX="$HOME/.winecx-office2016" /opt/winecx/bin/wine reg add "HKLM\\Software\\Wine\\Mono" /v Version /t REG_SZ /d "9.4.0" /f
 
-#Apply DirectX fixes
+#Apply DirectX fixes - run everything at once
 
 WINEPREFIX="$HOME/.winecx-office2016" /opt/winecx/bin/wine reg add "HKCU\\Software\\Wine\\Direct2D" /v max_version_factory /t REG_DWORD /d 0 /f && \
 WINEPREFIX="$HOME/.winecx-office2016" /opt/winecx/bin/wine reg add "HKCU\\Software\\Wine\\Direct3D" /v MaxVersionGL /t REG_DWORD /d 0x30002 /f
@@ -122,7 +122,7 @@ WINEPREFIX="$HOME/.winecx-office2016" /opt/winecx/bin/wine reg add "HKCU\\Softwa
 
 WINEPREFIX=$HOME/.winecx-office2016 /opt/winecx/bin/wine "C:\\Program Files\\Microsoft Office\\Office16\\EXCEL.EXE"
 
-#Extract icon and DLL folders 
+#Extract icon and DLL folders - run everything at once
 
 unzip "Office 2016 icons.zip"
 unzip "OfficeSoftwareProtectionPlatform.zip"
@@ -131,12 +131,12 @@ unzip "OfficeSoftwareProtectionPlatform.zip"
 
 cd "OfficeSoftwareProtectionPlatform"
 
-#Copy DLLs to the PREFIX
+#Copy DLLs to the PREFIX - run everything at once
 
 cp OSPPC.DLL OSPPCEXT.DLL sppcs.dll "$HOME/.winecx-office2016/drive_c/Program Files/Common Files/Microsoft Shared/OfficeSoftwareProtectionPlatform/"
 cp sppcs.dll "$HOME/.winecx-office2016/drive_c/Program Files/Microsoft Office/Office16/"
 
-#Copy icons to the system
+#Copy icons to the system - run everything at once
 
 sudo mkdir -p /usr/share/icons/hicolor/256x256/apps
 sudo cp "$HOME/Downloads/Requerimientos Office 2016/Office 2016 icons/"*.png /usr/share/icons/hicolor/256x256/apps/
@@ -147,7 +147,7 @@ sudo gtk-update-icon-cache /usr/share/icons/hicolor/
 sudo mkdir -p /opt/winecx/launchers
 sudo chmod 755 /opt/winecx/launchers
 
-#Create launchers (.desktop) and update the database, run everything at once
+#Create launchers (.desktop) and update the database - run everything at once
 ***************************************************************************
 #WORD
 sudo tee /opt/winecx/launchers/word2016.sh > /dev/null <<'EOF'
@@ -387,7 +387,7 @@ EOF
 
 ************************************
 
-#Fix EXCEL file associations
+#Fix EXCEL file associations - run everything at once
 **********************************
 
 cat > /tmp/fix_excel_associations.reg <<'EOF'
@@ -414,7 +414,7 @@ EOF
 *********************************************************************
 WINEPREFIX=$HOME/.winecx-office2016 /opt/winecx/bin/wine regedit /S /tmp/fix_excel_associations.reg
 *********************************************************************
-#Update file associations
+#Update file associations - run everything at once
 ******************************************************************
 xdg-mime default word2016.desktop application/msword
 xdg-mime default word2016.desktop application/vnd.openxmlformats-officedocument.wordprocessingml.document
