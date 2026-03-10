@@ -79,7 +79,7 @@ https://buzzheavier.com/y50svzu7djpe
 #First nstall 7zip and extract the .iso, run the command or do it graphically - run everything at once
 
 
-cd Downloads
+cd Downloads - run everything at once
 file=~/Downloads/SW_DVD5_Office_Professional_Plus_2016_W32_English_MLF_X20-41353.ISO
 outdir="${file%.ISO}"
 7z x "$file" -o"$outdir"
