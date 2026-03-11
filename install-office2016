@@ -42,7 +42,7 @@ export WINEPREFIX=$HOME/.winecx-office2016
 export WINE=/opt/winecx/bin/wine
 export WINEDLLPATH=/opt/winecx/lib/wine
 export PATH=/opt/winecx/bin:$PATH
-
+**************************************************
 #Create a prefix for installation 
 
 WINEARCH=win32 WINEPREFIX=~/.winecx-office2016 wineboot
@@ -67,7 +67,7 @@ WINEPREFIX=~/.winecx-office2016 winetricks -q vcrun2013
 WINEPREFIX=~/.winecx-office2016 winetricks -q vcrun2015 
 WINEPREFIX=~/.winecx-office2016 winetricks -q dotnet48
 WINEPREFIX=~/.winecx-office2016 winetricks --force -q vcrun2019
-
+*******************************************************************
 #Reconfigure the PREFIX to Windows 7 
 
 WINEPREFIX=~/.winecx-office2016 /opt/winecx/bin/wine winecfg -v win7
@@ -83,7 +83,7 @@ cd Downloads - run everything at once
 file=~/Downloads/SW_DVD5_Office_Professional_Plus_2016_W32_English_MLF_X20-41353.ISO
 outdir="${file%.ISO}"
 7z x "$file" -o"$outdir"
-
+********************************************************************************
 #Run the Office installer and install it; the folder name must match the one used in the command
 
 WINEPREFIX=$HOME/.winecx-office2016 /opt/winecx/bin/wine "$HOME/Downloads/SW_DVD5_Office_Professional_Plus_2016_W32_English_MLF_X20-41353/setup.exe"
@@ -97,7 +97,7 @@ https://drive.google.com/file/d/1_JBvLEarzUI4fEnnX983pP03b-oJsx5w/view?usp=shari
 cd ~/Downloads
 unzip "Requerimientos Office 2016.zip"
 cd "Requerimientos Office 2016"
-
+****************************************************************************************
 #Install Gecko - run everything at once
 
 msiextract -C gecko_extract wine-gecko-2.47.4-x86.msi
@@ -105,19 +105,19 @@ sudo mkdir -p /opt/winecx/share/wine/gecko
 sudo cp "$HOME/Downloads/Requerimientos Office 2016/wine-gecko-2.47.4-x86.msi" /opt/winecx/share/wine/gecko/
 sudo cp "$HOME/Downloads/Requerimientos Office 2016/wine-gecko-2.47.4-x86_64.msi" /opt/winecx/share/wine/gecko/
 WINEPREFIX="$HOME/.winecx-office2016" /opt/winecx/bin/wine reg add "HKLM\\Software\\Wine\\Gecko" /v Version /t REG_SZ /d "2.47.4" /f
-
+*************************************************************************************************
 #Install Mono - run everything at once
 
 msiextract -C mono_extract wine-mono-9.4.0-x86.msi
 sudo mkdir -p /opt/winecx/share/wine/mono
 sudo cp "$HOME/Downloads/Requerimientos Office 2016/wine-mono-9.4.0-x86.msi" /opt/winecx/share/wine/mono/
 WINEPREFIX="$HOME/.winecx-office2016" /opt/winecx/bin/wine reg add "HKLM\\Software\\Wine\\Mono" /v Version /t REG_SZ /d "9.4.0" /f
-
+***********************************************************************************************************
 #Apply DirectX fixes - run everything at once
 
 WINEPREFIX="$HOME/.winecx-office2016" /opt/winecx/bin/wine reg add "HKCU\\Software\\Wine\\Direct2D" /v max_version_factory /t REG_DWORD /d 0 /f && \
 WINEPREFIX="$HOME/.winecx-office2016" /opt/winecx/bin/wine reg add "HKCU\\Software\\Wine\\Direct3D" /v MaxVersionGL /t REG_DWORD /d 0x30002 /f
-
+*************************************************************************************************************
 #Start Excel via the console, execution test
 
 WINEPREFIX=$HOME/.winecx-office2016 /opt/winecx/bin/wine "C:\\Program Files\\Microsoft Office\\Office16\\EXCEL.EXE"
@@ -126,7 +126,7 @@ WINEPREFIX=$HOME/.winecx-office2016 /opt/winecx/bin/wine "C:\\Program Files\\Mic
 
 unzip "Office 2016 icons.zip"
 unzip "OfficeSoftwareProtectionPlatform.zip"
-
+**************************************************************************
 #Enter in the folder placed in the Downloads
 
 cd "OfficeSoftwareProtectionPlatform"
@@ -135,13 +135,13 @@ cd "OfficeSoftwareProtectionPlatform"
 
 cp OSPPC.DLL OSPPCEXT.DLL sppcs.dll "$HOME/.winecx-office2016/drive_c/Program Files/Common Files/Microsoft Shared/OfficeSoftwareProtectionPlatform/"
 cp sppcs.dll "$HOME/.winecx-office2016/drive_c/Program Files/Microsoft Office/Office16/"
-
+**********************************************************************************************************
 #Copy icons to the system - run everything at once
 
 sudo mkdir -p /usr/share/icons/hicolor/256x256/apps
 sudo cp "$HOME/Downloads/Requerimientos Office 2016/Office 2016 icons/"*.png /usr/share/icons/hicolor/256x256/apps/
 sudo gtk-update-icon-cache /usr/share/icons/hicolor/
-
+**************************************************************************************************************
 #Create a folder for Wrappers
 
 sudo mkdir -p /opt/winecx/launchers
@@ -388,7 +388,7 @@ EOF
 ************************************
 
 #Fix EXCEL file associations - run everything at once
-**********************************
+
 
 cat > /tmp/fix_excel_associations.reg <<'EOF'
 Windows Registry Editor Version 5.00
