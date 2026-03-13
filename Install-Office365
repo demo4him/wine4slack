@@ -59,11 +59,11 @@ cp -r .Microsoft_Office_365 "$HOME"
 sudo mkdir -p /usr/share/icons/hicolor/256x256/apps
 sudo cp "$HOME/Downloads/MSO365-English-/Office365Icons/"*365.svg /usr/share/icons/hicolor/256x256/apps/
 sudo gtk-update-icon-cache /usr/share/icons/hicolor/
-
+************************************************************************************
 # Create launcher folders - run everything at once
 sudo mkdir -p /opt/winecx/launchers
 sudo chmod 755 /opt/winecx/launchers
-
+**************************************************************************************
 # Create launchers run the entire command at once
 
 create_launcher() {
@@ -196,12 +196,12 @@ ln -s /dev/null "$HOME/.Microsoft_Office_365/dosdevices/c::"
 ln -s /dev/null "$HOME/.Microsoft_Office_365/dosdevices/z::"
 ln -s /media "$HOME/.Microsoft_Office_365/dosdevices/d:"
 ln -s "$HOME" "$HOME/.Microsoft_Office_365/dosdevices/e:"
-
+********************************************************************************
 # Rebuild user folders - run everything at once
 mkdir -p ~/.Microsoft_Office_365/drive_c/users/crossover
 mkdir -p ~/.Microsoft_Office_365/drive_c/users/crossover/AppData/Local
 mkdir -p ~/.Microsoft_Office_365/drive_c/users/crossover/AppData/Roaming
-
+*********************************************************************************
 # Update prefix
 WINEPREFIX=$HOME/.Microsoft_Office_365 /opt/winecx/bin/wine wineboot -u
 
@@ -211,7 +211,7 @@ WINEPREFIX=$HOME/.Microsoft_Office_365 winetricks -q fontsmooth=rgb
 WINEPREFIX=$HOME/.Microsoft_Office_365 winetricks -q fontsmooth-gray
 WINEPREFIX=$HOME/.Microsoft_Office_365 winetricks -q tahoma
 WINEPREFIX=$HOME/.Microsoft_Office_365 winetricks -q fakejapanese
-
+*****************************************************************************
 # Restart prefix - run everything at once
 pkill -9 -f wineserver || true
 pkill -9 -f wine || true
